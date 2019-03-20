@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<package>
+	<id>ch.cern.O2</id>
+	<title>O2</title>
+	<owner>
+		<name>Giulio Eulisse</name>
+	</owner>
+
+    <!-- Instruments Developer Help: https://help.apple.com/instruments/developer/mac/current/ -->
+
+    <ktrace-interval-schema>
+        <id>dpl-state</id>
+        <title>DPL Processing State</title>
+        <start-pattern>
+            <time>?start</time>
+            <class>33</class>
+            <subclass>0xa</subclass>
+            <code>0</code>
+            <function>1</function>
+            <thread>?thread</thread>
+            <arg1>?arg1</arg1>
+            <arg2>?arg2</arg2>
+            <arg3>?arg3</arg3>
+            <arg4>?arg4</arg4>
+        </start-pattern>
+        <end-pattern>
+            <time>?end</time>
+            <class>33</class>
+            <subclass>0xa</subclass>
+            <code>0</code>
+            <function>2</function>
+        </end-pattern>
+        <duration-column>
+            <mnemonic>duration</mnemonic>
+            <title>Duration</title>
+            <type>duration</type>
+        </duration-column>
+        <column>
+            <mnemonic>start-state</mnemonic>
+            <title>State start</title>
+            <type>event-time</type>
+            <expression>?start</expression>
+        </column>
+        <column>
+            <mnemonic>thread-id</mnemonic>
+            <title>Thread ID</title>
+            <type>thread</type>
+            <expression>?thread</expression>
+        </column>
+        <column>
+            <mnemonic>state</mnemonic>
+            <title>Argument</title>
+            <type>event-concept</type>
+            <expression>(switch ?arg4 (case 0 then "Blue") (case 1 then "Orange") (case 2 then "Green") (case 3 then "Purple") (case 4 then "Red") (default "Red"))</expression>
+        </column>
+        <column>
+            <mnemonic>value</mnemonic>
+            <title>Value</title>
+            <type>int64-value</type>
+            <expression>(+ 1 0)</expression>
+        </column>
+    </ktrace-interval-schema>
+
+    <ktrace-interval-schema>
+        <id>monitoring-state</id>
+        <title>Monitoring State</title>
+        <start-pattern>
+            <time>?start</time>
+            <class>33</class>
+            <subclass>0xa</subclass>
+            <code>1</code>
+            <function>1</function>
+            <thread>?thread</thread>
+            <arg1>?arg1</arg1>
+            <arg2>?arg2</arg2>
+            <arg3>?arg3</arg3>
+            <arg4>?arg4</arg4>
+        </start-pattern>
+        <end-pattern>
+            <time>?end</time>
+            <class>33</class>
+            <subclass>0xa</subclass>
+            <code>1</code>
+            <function>2</function>
+        </end-pattern>
+        <duration-column>
+            <mnemonic>duration</mnemonic>
+            <title>Duration</title>
+            <type>duration</type>
+        </duration-column>
+        <column>
+            <mnemonic>start-state</mnemonic>
+            <title>State start</title>
+            <type>event-time</type>
+            <expression>?start</expression>
+        </column>
+        <column>
+            <mnemonic>thread-id</mnemonic>
+            <title>Thread ID</title>
+            <type>thread</type>
+            <expression>?thread</expression>
+        </column>
+        <column>
+            <mnemonic>state</mnemonic>
+            <title>Argument</title>
+            <type>event-concept</type>
+            <expression>(switch ?arg4 (case 0 then "Blue") (case 1 then "Orange") (case 2 then "Green") (case 3 then "Purple") (case 4 then "Red") (default "Red"))</expression>
+        </column>
+        <column>
+            <mnemonic>value</mnemonic>
+            <title>Value</title>
+            <type>int64-value</type>
+            <expression>(+ 1 0)</expression>
+        </column>
+    </ktrace-interval-schema>
+
+    <ktrace-interval-schema>
+        <id>driver-read-stats</id>
+        <title>Driver read statistics</title>
+        <start-pattern>
+            <time>?start</time>
+            <class>33</class>
+            <subclass>0xa</subclass>
+            <code>2</code>
+            <function>1</function>
+            <arg2>?pid</arg2>
+            <arg3>?fd</arg3>
+        </start-pattern>
+        <end-pattern>
+            <time>?end</time>
+            <class>33</class>
+            <subclass>0xa</subclass>
+            <code>2</code>
+            <function>2</function>
+            <arg2>?bytes-read</arg2>
+        </end-pattern>
+        <column>
+            <mnemonic>pid</mnemonic>
+            <title>PID</title>
+            <type>pid</type>
+            <expression>?pid</expression>
+        </column>
+        <column>
+            <mnemonic>fd</mnemonic>
+            <title>File Descriptor</title>
+            <type>fd</type>
+            <expression>?fd</expression>
+        </column>
+        <column>
+            <mnemonic>bytes-read</mnemonic>
+            <title>Bytes read</title>
+            <type>size-in-bytes</type>
+            <expression>?bytes-read</expression>
+        </column>
+    </ktrace-interval-schema>
+
+    <instrument>
+        <id>O2DPLState</id>
+        <title>O2 DPL State</title>
+        <category>Behavior</category>
+        <purpose>Tracing state of data processing</purpose>
+        <icon>Points of Interest</icon>
+        
+        <create-table>
+            <id>dpl-state-table</id>
+            <schema-ref>dpl-state</schema-ref>
+        </create-table>
+        
+        <graph>
+            <title>State</title>
+            <lane>
+                <title>Data Processing</title>
+                <table-ref>dpl-state-table</table-ref>
+                <plot-template>
+                    <instance-by>thread-id</instance-by>
+                    <label-format>%s</label-format>
+                    <value-from>value</value-from>
+                    <color-from>state</color-from>
+                    <label-from>thread-id</label-from>
+                </plot-template>
+            </lane>
+        </graph>
+
+        <list>
+            <title>State</title>
+            <table-ref>dpl-state-table</table-ref>
+            <column>start</column>
+            <column>state</column>
+            <column>duration</column>
+            <column>thread-id</column>
+            <column>value</column>
+        </list>
+    </instrument>
+
+    <instrument>
+        <id>O2MonitoringState</id>
+        <title>O2 Monitoring State</title>
+        <category>Behavior</category>
+        <purpose>Tracing state of monitoring in DPL</purpose>
+        <icon>Points of Interest</icon>
+        
+        <create-table>
+            <id>monitoring-state-table</id>
+            <schema-ref>monitoring-state</schema-ref>
+        </create-table>
+        
+        <graph>
+            <title>State</title>
+            <lane>
+                <title>Monitoring</title>
+                <table-ref>monitoring-state-table</table-ref>
+                <plot-template>
+                    <instance-by>thread-id</instance-by>
+                    <label-format>%s</label-format>
+                    <value-from>value</value-from>
+                    <color-from>state</color-from>
+                    <label-from>thread-id</label-from>
+                </plot-template>
+            </lane>
+        </graph>
+        
+        <list>
+            <title>State</title>
+            <table-ref>monitoring-state-table</table-ref>
+            <column>start</column>
+            <column>state</column>
+            <column>duration</column>
+            <column>thread-id</column>
+            <column>value</column>
+        </list>
+    </instrument>
+
+    <instrument>
+        <id>O2DriverStats</id>
+        <title>O2 Driver Stats</title>
+        <category>Behavior</category>
+        <purpose>Statistics about DPL driver</purpose>
+        <icon>Points of Interest</icon>
+        
+        <create-table>
+            <id>driver-read-stats-table</id>
+            <schema-ref>driver-read-stats</schema-ref>
+        </create-table>
+        
+        <graph>
+            <title>Read stats</title>
+            <lane>
+                <title>Children Read Stats</title>
+                <table-ref>driver-read-stats-table</table-ref>
+                <plot-template>
+                    <instance-by>pid</instance-by>
+                    <label-format>%s</label-format>
+                    <value-from>bytes-read</value-from>
+                    <label-from>pid</label-from>
+                </plot-template>
+            </lane>
+        </graph>
+        
+        <list>
+            <title>Read stats</title>
+            <table-ref>driver-read-stats-table</table-ref>
+            <column>pid</column>
+            <column>fd</column>
+            <column>bytes-read</column>
+        </list>
+    </instrument>
+
+</package>

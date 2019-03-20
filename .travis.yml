@@ -1,0 +1,19 @@
+language: objective-c
+osx_image: xcode10.1
+xcode_project: O2InstrumentsIntegration.xcodeproj
+xcode_destination: platform=macOS
+xcode_scheme: O2
+script:
+    - xcodebuild -project O2InstrumentsIntegration.xcodeproj -target O2InstrumentsIntegration
+before_deploy:
+  # Create a tarball with the resulting package
+  - cd build/Release && tar -zcvf O2Dissociator.tar.gz O2.instrdst
+deploy:
+  provider: releases
+  api_key: $GITHUB_API_TOKEN
+  file: "O2Dissociator.tar.gz"
+  skip_cleanup: true
+  on:
+    tags: true
+
+
