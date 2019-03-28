@@ -48,6 +48,11 @@ in order to extend it you need to have a look at the XML file `O2/O2.instpkg`
 feel free to ask for help if you have signposts / intervals for which you would
 like to have a custom instrument.
 
+## What about linux?
+
+In case you are using a mac, this plugin will not be of much use, however the
+instrumentation in O2 using `O2_SIGNPOST` will be available via SystemTap.
+
 ## Obligatory screenshot:
 
 ![screenshot](screenshot.png)
