@@ -50,8 +50,9 @@ like to have a custom instrument.
 
 ## What about linux?
 
-In case you are using a mac, this plugin will not be of much use, however the
-instrumentation in O2 using `O2_SIGNPOST` will be available via SystemTap.
+In case you are using a Linux box (suggestions for alternatives to Instruments on Linux welcome),
+this plugin will not be of much use, however the instrumentation in O2 using `O2_SIGNPOST`
+will still be available via SystemTap.
 
 ## Obligatory screenshot:
 
